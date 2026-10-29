@@ -1,0 +1,25 @@
+{
+  "name": "gacui-nodejs",
+  "version": "0.1.0",
+  "description": "Node.js client binding for GacUI's Windows HTTP automation endpoint",
+  "main": "src/index.js",
+  "bin": {
+    "gacui-nodejs-demo": "src/demo.js"
+  },
+  "scripts": {
+    "demo": "node src/demo.js"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "pkg": {
+    "scripts": [
+      "src/**/*.js"
+    ],
+    "targets": [
+      "node20-win-x64"
+    ],
+    "outputPath": "dist"
+  }
+}
