@@ -1,0 +1,45 @@
+name: Windows x64 demo
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Package standalone Windows x64 executable
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          npx --yes @yao-pkg/pkg@6.5.1 . --targets node20-win-x64 --output dist/gacui-nodejs-demo.exe
+          if (!(Test-Path dist/gacui-nodejs-demo.exe)) {
+            throw "Executable was not produced."
+          }
+
+      - name: Smoke test executable
+        shell: pwsh
+        run: |
+          & dist/gacui-nodejs-demo.exe --help
+          if ($LASTEXITCODE -ne 0) { throw "Demo executable smoke test failed." }
+
+      - name: Upload Windows x64 demo artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gacui-nodejs-demo-windows-x64
+          path: dist/gacui-nodejs-demo.exe
+          if-no-files-found: error
+          retention-days: 14
